@@ -3,6 +3,8 @@
 The `test-infra` repository contains a collection of tools for testing Knative,
 collecting metrics and displaying test results.
 
+## Foo
+
 ## High level architecture
 
 Knative uses [Prow](https://github.com/kubernetes/test-infra/tree/master/prow)
