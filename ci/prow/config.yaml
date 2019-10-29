@@ -92,6 +92,7 @@ tide:
     - "google/knative-gcp"
     - "knative/caching"
     - "knative/client"
+    - "knative/community"
     - "knative/docs"
     - "knative/eventing"
     - "knative/eventing-contrib"
@@ -407,7 +408,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -451,7 +452,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -497,7 +498,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-tests.sh"
+        - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: repoview-token
           mountPath: /etc/repoview-token
@@ -536,7 +537,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -570,7 +571,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -606,7 +607,7 @@ presubmits:
         args:
         - "./test/presubmit-tests.sh"
         - "--run-test"
-        - "./test/e2e-upgrade-tests.sh"
+        - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
         volumeMounts:
         - name: test-account
           mountPath: /etc/test-account
@@ -4117,42 +4118,6 @@ periodics:
     - name: release-account
       secret:
         secretName: release-account
-- cron: "38 8 * * *"
-  name: ci-knative-serving-latency
-  labels:
-      prow.k8s.io/pubsub.project: knative-tests
-      prow.k8s.io/pubsub.topic: knative-monitoring
-      prow.k8s.io/pubsub.runID: ci-knative-serving-latency
-  agent: kubernetes
-  decorate: true
-  extra_refs:
-  - org: knative
-    repo: serving
-    base_ref: master
-    path_alias: knative.dev/serving
-  spec:
-    containers:
-    - image: gcr.io/knative-tests/test-infra/metrics:latest
-      imagePullPolicy: Always
-      command:
-      - "/metrics"
-      args:
-      - "--source-directory=ci-knative-serving-continuous"
-      - "--artifacts-dir=$(ARTIFACTS)"
-      - "--service-account=/etc/test-account/service-account.json"
-      volumeMounts:
-      - name: test-account
-        mountPath: /etc/test-account
-        readOnly: true
-      env:
-      - name: GOOGLE_APPLICATION_CREDENTIALS
-        value: /etc/test-account/service-account.json
-      - name: E2E_CLUSTER_REGION
-        value: us-central1
-    volumes:
-    - name: test-account
-      secret:
-        secretName: test-account
 - cron: "13 9 * * *"
   name: ci-knative-serving-webhook-apicoverage
   agent: kubernetes
@@ -6542,7 +6507,7 @@ postsubmits:
         - runner.sh
         args:
         - "./test/performance/performance-tests.sh"
-        - "--reconcile-clusters"
+        - "--reconcile-benchmark-clusters"
         volumeMounts:
         - name: performance-test
           mountPath: /etc/performance-test
@@ -6626,7 +6591,7 @@ postsubmits:
         - runner.sh
         args:
         - "./test/performance/performance-tests.sh"
-        - "--reconcile-clusters"
+        - "--reconcile-benchmark-clusters"
         volumeMounts:
         - name: performance-test
           mountPath: /etc/performance-test

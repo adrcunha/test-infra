@@ -34,11 +34,11 @@ presubmits:
     - integration-tests: true
       args:
       - "--run-test"
-      - "./test/e2e-tests.sh"
+      - "./test/e2e-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: upgrade-tests
       args:
       - "--run-test"
-      - "./test/e2e-upgrade-tests.sh"
+      - "./test/e2e-upgrade-tests.sh --istio-version 1.2-latest --no-mesh"
     - custom-test: smoke-tests
       skip_branches:  # Skip these branches, as test isn't available.
       - release-0.6
@@ -204,6 +204,13 @@ presubmits:
     - integration-tests: false
     - go-coverage: false
 
+  knative/community:
+    # This repo only uses Tide
+    - build-tests: false
+    - unit-tests: false
+    - integration-tests: false
+    - go-coverage: false
+
 periodics:
   knative/serving:
     - continuous: true
@@ -270,9 +277,6 @@ periodics:
           memory: 12Gi
         limits:
           memory: 16Gi
-    - latency: true
-      dot-dev: true
-      go113: true
     - webhook-apicoverage: true
       dot-dev: true
       go113: true
