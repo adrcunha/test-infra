@@ -29,10 +29,10 @@ plank:
     grace_period: 15000000000 # 15s
     utility_images:
       # Update these versions when updating plank version in cluster.yaml
-      clonerefs: "gcr.io/k8s-prow/clonerefs:v20191022-7c8165546"
-      initupload: "gcr.io/k8s-prow/initupload:v20191022-7c8165546"
-      entrypoint: "gcr.io/k8s-prow/entrypoint:v20191022-7c8165546"
-      sidecar: "gcr.io/k8s-prow/sidecar:v20191022-7c8165546"
+      clonerefs: "gcr.io/k8s-prow/clonerefs:v20191028-a687a71be"
+      initupload: "gcr.io/k8s-prow/initupload:v20191028-a687a71be"
+      entrypoint: "gcr.io/k8s-prow/entrypoint:v20191028-a687a71be"
+      sidecar: "gcr.io/k8s-prow/sidecar:v20191028-a687a71be"
     gcs_configuration:
       bucket: "knative-prow"
       path_strategy: "explicit"
@@ -5971,7 +5971,7 @@ periodics:
       args:
       - "--artifacts=$(ARTIFACTS)"
       - "--cov-threshold-percentage=50"
-- cron: "0 19 * * 1"
+- cron: "0 */6 * * *"
   name: ci-knative-cleanup
   labels:
       prow.k8s.io/pubsub.project: knative-tests
@@ -6515,6 +6515,82 @@ periodics:
     - name: performance-test
       secret:
         secretName: performance-test
+- cron: "30 07 * * *"
+  name: ci-google-knative-gcp-recreate-clusters
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-recreate-clusters
+  decorate: true
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/performance/performance-tests.sh"
+      - "--recreate-clusters"
+      volumeMounts:
+      - name: performance-test
+        mountPath: /etc/performance-test
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/performance-test/service-account.json
+      - name: GITHUB_TOKEN
+        value: /etc/performance-test/github-token
+      - name: SLACK_READ_TOKEN
+        value: /etc/performance-test/slack-read-token
+      - name: SLACK_WRITE_TOKEN
+        value: /etc/performance-test/slack-write-token
+    volumes:
+    - name: performance-test
+      secret:
+        secretName: performance-test
+- cron: "5 * * * *"
+  name: ci-google-knative-gcp-update-clusters
+  agent: kubernetes
+  labels:
+    prow.k8s.io/pubsub.project: knative-tests
+    prow.k8s.io/pubsub.topic: knative-monitoring
+    prow.k8s.io/pubsub.runID: ci-google-knative-gcp-update-clusters
+  decorate: true
+  extra_refs:
+  - org: google
+    repo: knative-gcp
+    base_ref: master
+  spec:
+    containers:
+    - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+      imagePullPolicy: Always
+      command:
+      - runner.sh
+      args:
+      - "./test/performance/performance-tests.sh"
+      - "--update-clusters"
+      volumeMounts:
+      - name: performance-test
+        mountPath: /etc/performance-test
+        readOnly: true
+      env:
+      - name: GOOGLE_APPLICATION_CREDENTIALS
+        value: /etc/performance-test/service-account.json
+      - name: GITHUB_TOKEN
+        value: /etc/performance-test/github-token
+      - name: SLACK_READ_TOKEN
+        value: /etc/performance-test/slack-read-token
+      - name: SLACK_WRITE_TOKEN
+        value: /etc/performance-test/slack-write-token
+    volumes:
+    - name: performance-test
+      secret:
+        secretName: performance-test
 postsubmits:
   knative/serving:
   - name: post-knative-serving-reconcile-clusters
@@ -6717,6 +6793,42 @@ postsubmits:
         - "--artifacts=$(ARTIFACTS)"
         - "--cov-threshold-percentage=0"
   google/knative-gcp:
+  - name: post-google-knative-gcp-reconcile-clusters
+    branches:
+    - master
+    agent: kubernetes
+    decorate: true
+    max_concurrency: 1
+    labels:
+      prow.k8s.io/pubsub.project: knative-tests
+      prow.k8s.io/pubsub.topic: knative-monitoring
+      prow.k8s.io/pubsub.runID: post-google-knative-gcp-reconcile-clusters
+    spec:
+      containers:
+      - image: gcr.io/knative-tests/test-infra/prow-tests-go112:stable
+        imagePullPolicy: Always
+        command:
+        - runner.sh
+        args:
+        - "./test/performance/performance-tests.sh"
+        - "--reconcile-benchmark-clusters"
+        volumeMounts:
+        - name: performance-test
+          mountPath: /etc/performance-test
+          readOnly: true
+        env:
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /etc/performance-test/service-account.json
+        - name: GITHUB_TOKEN
+          value: /etc/performance-test/github-token
+        - name: SLACK_READ_TOKEN
+          value: /etc/performance-test/slack-read-token
+        - name: SLACK_WRITE_TOKEN
+          value: /etc/performance-test/slack-write-token
+      volumes:
+      - name: performance-test
+        secret:
+          secretName: performance-test
   - name: post-google-knative-gcp-go-coverage
     branches:
     - master
