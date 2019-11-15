@@ -7,6 +7,6 @@ install:
   - cd ../../..
   - mkdir -p knative.dev
   - mv github.com/adrcunha/test-infra knative.dev
-  - echo Nothing
+  - cd knative.dev/test-infra
 
 script: ./test/presubmit-tests.sh --build-tests
