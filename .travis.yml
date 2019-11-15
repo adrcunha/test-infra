@@ -3,6 +3,10 @@ go:
   - "1.13"
 
 install:
+  - pwd
+  - cd ../../..
+  - mkdir -p knative.dev
+  - mv github.com/adrcunha/test-infra knative.dev
   - echo Nothing
 
 script: ./test/presubmit-tests.sh --build-tests
