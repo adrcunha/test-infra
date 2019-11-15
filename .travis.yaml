@@ -1,0 +1,5 @@
+language: go
+go:
+ - "1.13"
+
+script: ./test/presubmit-tests.sh --build-tests
