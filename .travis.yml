@@ -1,5 +1,8 @@
 language: go
 go:
- - "1.13"
+  - "1.13"
+
+install:
+  - echo Nothing
 
 script: ./test/presubmit-tests.sh --build-tests
