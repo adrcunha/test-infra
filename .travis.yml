@@ -19,7 +19,7 @@ install:
   - if [[ -z "$(which dep)" ]]; then go get -u github.com/golang/dep/cmd/dep ; fi
   - if [[ -z "$(which go-junit-report)" ]]; then go get -u github.com/jstemmer/go-junit-report ; fi
   - if [[ -z "$(which liche)" ]]; then GO111MODULE=on go get -u github.com/raviqqe/liche ; fi
-  - if [[ -z "$(which kubectl)" ]]; then gcloud components install kubectl ; fi
+  - if [[ -z "$(which kubectl)" ]]; then curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl ; chmod +x ./kubectl ; sudo mv ./kubectl /usr/local/bin/kubectl ; fi
 
 addons:
   apt:
