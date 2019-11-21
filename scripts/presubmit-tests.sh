@@ -26,6 +26,7 @@ readonly PRESUBMIT_TEST_FAIL_FAST=${PRESUBMIT_TEST_FAIL_FAST:-0}
 
 # Extensions or file patterns that don't require presubmit tests.
 readonly NO_PRESUBMIT_FILES=(\.png \.gitignore \.gitattributes ^OWNERS ^OWNERS_ALIASES ^AUTHORS)
+export NOPF="$NO_PRESUBMIT_FILES"
 
 # Flag if this is a presubmit run or not.
 [[ IS_PROW && -n "${PULL_PULL_SHA}" ]] && IS_PRESUBMIT=1 || IS_PRESUBMIT=0
@@ -62,6 +63,8 @@ function initialize_environment() {
   CHANGED_FILES="$(list_changed_files)"
   if [[ -n "${CHANGED_FILES}" ]]; then
     echo -e "Changed files in commit ${PULL_PULL_SHA}:\n${CHANGED_FILES}"
+echo "1. ${NO_PRESUBMIT_FILES}"
+echo "2. $NOPF"
     local no_presubmit_files="${NO_PRESUBMIT_FILES[@]}"
     if pr_only_contains "${no_presubmit_files}"; then
       echo "Commit contains only exempt files (${no_presubmit_files})"
