@@ -62,7 +62,7 @@ function initialize_environment() {
   CHANGED_FILES="$(list_changed_files)"
   if [[ -n "${CHANGED_FILES}" ]]; then
     echo -e "Changed files in commit ${PULL_PULL_SHA}:\n${CHANGED_FILES}"
-    local no_presubmit_files="${NO_PRESUBMIT_FILES[*]}"
+    local no_presubmit_files="${NO_PRESUBMIT_FILES[@]}"
     if pr_only_contains "${no_presubmit_files}"; then
       echo "Commit contains only exempt files (${no_presubmit_files})"
       IS_PRESUBMIT_EXEMPT_PR=1
