@@ -24,7 +24,13 @@ addons:
 
 before_install:
   - wget https://github.com/bazelbuild/bazel/releases/download/1.2.0/bazel_1.2.0-linux-x86_64.deb
-#  - sha256sum -c tools/bazel_1.2.0-linux-x86_64.deb.sha256
   - sudo dpkg -i bazel_1.2.0-linux-x86_64.deb
 
-script: ./test/presubmit-tests.sh --build-tests
+jobs:
+  include:
+  - name: "Build tests"
+    env: TEST_SUITE="--build-tests"
+  - name: "Unit tests"
+    env: TEST_SUITE="--unit-tests"
+
+script: ./test/presubmit-tests.sh $TEST_SUITE
