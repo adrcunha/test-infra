@@ -26,6 +26,7 @@ readonly PRESUBMIT_TEST_FAIL_FAST=${PRESUBMIT_TEST_FAIL_FAST:-0}
 
 # Extensions or file patterns that don't require presubmit tests.
 readonly NO_PRESUBMIT_FILES=(\.png \.gitignore \.gitattributes ^OWNERS ^OWNERS_ALIASES ^AUTHORS)
+export NO_PRESUBMIT_FILES
 export NOPF="$NO_PRESUBMIT_FILES"
 
 # Flag if this is a presubmit run or not.
