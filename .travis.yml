@@ -2,6 +2,10 @@ language: go
 go:
   - "1.13"
 
+cache:
+  directories:
+  - /home/travis/gopath/bin
+
 install:
   - bash --version
   - pwd
