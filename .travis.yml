@@ -13,11 +13,11 @@ install:
   - mkdir -p knative.dev
   - mv github.com/adrcunha/test-infra knative.dev
   - cd knative.dev/test-infra
-  - [[ -z "$(which ko)" ]] && GO111MODULE=on go get github.com/google/ko/cmd/ko
-  - [[ -z "$(which kail)" ]] && GO111MODULE=on go get github.com/boz/kail/cmd/kail
-  - [[ -z "$(which dep)" ]] && go get -u github.com/golang/dep/cmd/dep
-  - [[ -z "$(which go-junit-report)" ]] && go get -u github.com/jstemmer/go-junit-report
-  - [[ -z "$(which liche)" ]] && GO111MODULE=on go get -u github.com/raviqqe/liche
+  - if [[ -z "$(which ko)" ]]; then GO111MODULE=on go get github.com/google/ko/cmd/ko ; fi
+  - if [[ -z "$(which kail)" ]]; then GO111MODULE=on go get github.com/boz/kail/cmd/kail ; fi
+  - if [[ -z "$(which dep)" ]]; then go get -u github.com/golang/dep/cmd/dep ; fi
+  - if [[ -z "$(which go-junit-report)" ]]; then go get -u github.com/jstemmer/go-junit-report ; fi
+  - if [[ -z "$(which liche)" ]]; then GO111MODULE=on go get -u github.com/raviqqe/liche ; fi
 
 addons:
   apt:
