@@ -14,4 +14,17 @@ install:
   - go get -u github.com/jstemmer/go-junit-report
   - GO111MODULE=on go get -u github.com/raviqqe/liche
 
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - wget
+      - pkg-config
+
+before_install:
+  - wget https://github.com/bazelbuild/bazel/releases/download/1.2.0/bazel_1.2.0-linux-x86_64.deb
+  - sha256sum -c tools/bazel_1.2.0-linux-x86_64.deb.sha256
+  - sudo dpkg -i bazel_1.2.0-linux-x86_64.deb
+
 script: ./test/presubmit-tests.sh --build-tests
