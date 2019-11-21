@@ -8,5 +8,7 @@ install:
   - mkdir -p knative.dev
   - mv github.com/adrcunha/test-infra knative.dev
   - cd knative.dev/test-infra
+  - go get github.com/golang/dep
+  - go get github.com/google/ko
 
 script: ./test/presubmit-tests.sh --build-tests
