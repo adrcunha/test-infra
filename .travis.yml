@@ -3,6 +3,7 @@ go:
   - "1.13"
 
 install:
+  - bash --version
   - pwd
   - cd ../../..
   - mkdir -p knative.dev

@@ -63,10 +63,17 @@ function initialize_environment() {
   if [[ -n "${CHANGED_FILES}" ]]; then
     echo -e "Changed files in commit ${PULL_PULL_SHA}:\n${CHANGED_FILES}"
     local no_presubmit_files="${NO_PRESUBMIT_FILES[*]}"
-    pr_only_contains "${no_presubmit_files}" && IS_PRESUBMIT_EXEMPT_PR=1
+    if pr_only_contains "${no_presubmit_files}"; then
+      echo "Commit contains only exempt files (${no_presubmit_files})"
+      IS_PRESUBMIT_EXEMPT_PR=1
+    fi
     # A documentation PR must contain markdown files
     if pr_only_contains "\.md ${no_presubmit_files}"; then
-      [[ -n "$(echo "${CHANGED_FILES}" | grep '\.md')" ]] && IS_DOCUMENTATION_PR=1
+      echo "Commit contains only markdown and/or exempt files (.md ${no_presubmit_files})"
+      if [[ -n "$(echo "${CHANGED_FILES}" | grep '\.md')" ]]; then
+        echo "Commit is a documentation PR"
+        IS_DOCUMENTATION_PR=1
+      fi
     fi
   else
     header "NO CHANGED FILES REPORTED, ASSUMING IT'S AN ERROR AND RUNNING TESTS ANYWAY"
