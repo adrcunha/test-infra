@@ -20,6 +20,7 @@ install:
   - if [[ -z "$(which go-junit-report)" ]]; then go get -u github.com/jstemmer/go-junit-report ; fi
   - if [[ -z "$(which liche)" ]]; then GO111MODULE=on go get -u github.com/raviqqe/liche ; fi
   - if [[ -z "$(which kubectl)" ]]; then curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl ; chmod +x ./kubectl ; sudo mv ./kubectl /usr/local/bin/kubectl ; fi
+  - if [[ -z "$(which goveralls)" ]]; then go get github.com/mattn/goveralls ; fi
 
 addons:
   apt:
@@ -35,9 +36,11 @@ before_install:
 
 jobs:
   include:
+  - name: "Code coverage"
+    env: TEST_SUITE="--code-coverage"
   - name: "Build tests"
     env: TEST_SUITE="--build-tests"
   - name: "Unit tests"
     env: TEST_SUITE="--unit-tests"
 
-script: ./test/presubmit-tests.sh $TEST_SUITE
+script: if [[ $TEST_SUITE == --code-coverage ]]; then $GOPATH/bin/goveralls -service=travis-ci ; else ./test/presubmit-tests.sh $TEST_SUITE ; fi
