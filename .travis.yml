@@ -2,6 +2,10 @@ language: go
 go:
   - "1.13"
 
+env:
+  global:
+    - secure: HNHiMV6n/F7SuqdG1AmjtYxghqd9ky4Lanv7kLyQKE6lx+W4Hl7Vyx6IB8vZyaPreHsYvH5MN7HriB1tr4vkEpEVy0gdHOkg17X4cU92NItvleQCzUceSvrWDl5kiFEjQmFIr5+PI/sPb6SPpG68d8wcIzu6WuMjacBxNvfWaJptkwn7Ovs6MliLUNgrYfd5/11EAIuwp3GqppUCby9Fpm/3RO7X8Xsdp4wINqWiMpM+7Vi98h5bfLHMf4m0p/yITx+Xh6l9rtRJVYQXKirqVcfaG/roj14OkzS6F2kRNP9dsQmcV3BobTMSyJrUbLD38Rid4NNFbhd9BuENos+tdBWE3oYvbXLUWtTFx/DXUjV7iK1fz4iAbAXYug3op6838F8Z5+GiCBmsbRBtrUzdNxUGiuo++Z3Fy2xHyV5vlnYhlAW+x5dBcFTikbdrGNSbTJGeDKUADlpkwzHvt1GHZwopkO+bDNr1EDE6MqlcJA/E9cFI0HnPqFuu0k7rTVksRK0NjHVKouYhPWpyugWu3RtZmhYiW92+8TtLh39z31fEcEJxIrCksXpVvAX2S/NhlrvhidZS1hEl4acnG/mqOw7OzV1zT8EwqDsH2LCsCIR5GpU8MvAkCDd8m0fLAM5P0+d8DV/6l7FIuua9cBzdrYaY3DXO+/6CjphpsTB3CQM=
+
 cache:
   directories:
   - /home/travis/gopath/bin
@@ -14,6 +18,7 @@ install:
   - mkdir -p knative.dev
   - mv github.com/adrcunha/test-infra knative.dev
   - cd knative.dev/test-infra
+  - echo "Encrypted env var. |SOMEVAR=secretvalue|SOMEVAR=$SOMEVAR|"
   - if [[ -z "$(which ko)" ]]; then GO111MODULE=on go get github.com/google/ko/cmd/ko ; fi
   - if [[ -z "$(which kail)" ]]; then GO111MODULE=on go get github.com/boz/kail/cmd/kail ; fi
   - if [[ -z "$(which dep)" ]]; then go get -u github.com/golang/dep/cmd/dep ; fi
