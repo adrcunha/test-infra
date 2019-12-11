@@ -73,6 +73,12 @@ presubmits:
       args:
       - "--run-test"
       - "./test/e2e-tests.sh --gloo-version 0.17.1"
+    - custom-test: kourier-stable
+      always_run: false
+      optional: true
+      args:
+        - "--run-test"
+        - "./test/e2e-tests.sh --kourier-version stable"
     - custom-test: https
       always_run: false
       optional: true
@@ -81,6 +87,10 @@ presubmits:
       - "./test/e2e-tests.sh --https"
 
   knative/client:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
+      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -101,6 +111,11 @@ presubmits:
       legacy-branches:
       - release-0.7
       - release-0.8
+      go112-branches:
+      - release-0.7
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
       resources:
         requests:
@@ -116,6 +131,11 @@ presubmits:
       legacy-branches:
       - release-0.7
       - release-0.8
+      go112-branches:
+      - release-0.7
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
       resources:
         requests:
@@ -127,6 +147,12 @@ presubmits:
     - go-coverage: true
 
   knative/docs:
+    - repo-settings:
+      go112-branches:
+      - release-0.7
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -157,6 +183,10 @@ presubmits:
       dot-dev: true
 
   knative/caching:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
+      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -177,9 +207,19 @@ presubmits:
     - unit-tests: true
       dot-dev: true
 
+  knative/sample-source:
+    - build-tests: true
+      dot-dev: true
+    - unit-tests: true
+      dot-dev: true
+
   google/knative-gcp:
     - repo-settings:
       performance: true
+      go112-branches:
+      - release-0.8
+      - release-0.9
+      - release-0.10
     - build-tests: true
     - unit-tests: true
     - integration-tests: true
@@ -206,6 +246,10 @@ presubmits:
       dot-dev: true
 
   knative/eventing-operator:
+    - repo-settings:
+      go112-branches:
+      - release-0.9
+      - release-0.10
     - build-tests: true
       dot-dev: true
     - unit-tests: true
@@ -277,6 +321,10 @@ periodics:
       go113: true
     - custom-job: gloo-0.17.1
       full-command: "./test/e2e-tests.sh --gloo-version 0.17.1"
+      dot-dev: true
+      go113: true
+    - custom-job: kourier-stable
+      full-command: "./test/e2e-tests.sh --kourier-version stable"
       dot-dev: true
       go113: true
     - nightly: true
@@ -414,6 +462,10 @@ periodics:
     - continuous: true
 
   knative/sample-controller:
+    - continuous: true
+      dot-dev: true
+
+  knative/sample-source:
     - continuous: true
       dot-dev: true
 
