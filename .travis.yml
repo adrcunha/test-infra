@@ -18,7 +18,7 @@ install:
   - mkdir -p knative.dev
   - mv github.com/adrcunha/test-infra knative.dev
   - cd knative.dev/test-infra
-  - echo "Encrypted env var. |SOMEVAR=secretvalue|SOMEVAR=$SOMEVAR|"
+  - echo -e "Encrypted env var.\nSOMEVAR=secretvalue\nSOMEVAR=${SOMEVAR}\n---"
   - if [[ -z "$(which ko)" ]]; then GO111MODULE=on go get github.com/google/ko/cmd/ko ; fi
   - if [[ -z "$(which kail)" ]]; then GO111MODULE=on go get github.com/boz/kail/cmd/kail ; fi
   - if [[ -z "$(which dep)" ]]; then go get -u github.com/golang/dep/cmd/dep ; fi
