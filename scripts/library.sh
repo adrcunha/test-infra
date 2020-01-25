@@ -619,15 +619,19 @@ function get_latest_knative_yaml_source() {
     local tag_name="$(git describe --tags --abbrev=0)"
     # The given repo might not have this tag, so we need to find its latest release manifest with the same major&minor version.
     local major_minor="$(echo ${tag_name} | cut -d. -f1-2)"
-    local yaml_source_path="$(gsutil ls gs://knative-releases/${repo_name}/previous/${major_minor}.*/${yaml_name}.yaml \
+    local yaml_source_path="$(
+      gsutil ls gs://knative-releases/${repo_name}/previous/${major_minor}.*/${yaml_name}.yaml 2> /dev/null \
       | sort \
       | tail -n 1 \
       | cut -b6-)"
-    echo "https://storage.googleapis.com/${yaml_source_path}"
-  # If it's not a release branch, the yaml source URL should be nightly build.
-  else
-    echo "https://storage.googleapis.com/knative-nightly/${repo_name}/latest/${yaml_name}.yaml"
+    # The version does exist, return it.
+    if [[ -n "${yaml_source_path}" ]]; then
+      echo "https://storage.googleapis.com/${yaml_source_path}"
+      return
+    fi
+    # Otherwise, fall back to nightly.
   fi
+  echo "https://storage.googleapis.com/knative-nightly/${repo_name}/latest/${yaml_name}.yaml"
 }
 
 # Initializations that depend on previous functions.
